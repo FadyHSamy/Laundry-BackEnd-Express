@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
   phoneNumber: { type: String, required: false },
   Address: { type: String, required: false },
   registrationDate: { type: Date, required: true, default: Date.now },
-  lastLoginDate: { type: Date, required: true },
+  lastLoginDate: { type: Date, required: false },
   status: { type: String, required: true, default: "Active" },
   userRole: { type: String, required: true, default: "Customer" },
 });
