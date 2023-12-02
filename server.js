@@ -3,10 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const passport = require("passport");
+const cors = require("cors");
+
 // Initialize app with express
 const app = express(); //Bring in express
+app.use(cors());
 
+// ------------Routes------------//
 const userRoutes = require("./routes/users");
 
 // DataBase Connection
