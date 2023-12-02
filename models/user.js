@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
   lastName: { type: String, required: true },
   phoneNumber: { type: String, required: false },
   Address: { type: String, required: false },
-  registrationDate: { type: Date, required: true, default: Date.now },
+  registrationDate: { type: Date, required: true, default: Date.now() },
   lastLoginDate: { type: Date, required: false },
   status: { type: String, required: true, default: "Active" },
   userRole: { type: String, required: true, default: "Customer" },

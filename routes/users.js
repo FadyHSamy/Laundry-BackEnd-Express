@@ -26,7 +26,7 @@ router.post("/userRegister", async (req, res) => {
       res.status(400).json({
         success: false,
         responseData: null,
-        message: "Duplicate Value",
+        message: "It appears this email is already associated with an account",
         errorDetails: err,
       });
     } else {
@@ -72,6 +72,8 @@ router.post("/userLogin", async (req, res) => {
     }
 
     // If both checks pass, you can consider the user logged in
+
+    userModel.findOneAndUpdate({ _id: user._id }, { $set: { lastLoginDate: Date.now() } }, { new: true });
     let returnUser = {
       id: user.id,
       email: user.email,
