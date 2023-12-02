@@ -55,6 +55,7 @@ router.post("/userLogin", async (req, res) => {
         success: false,
         responseData: null,
         message: "Error, Account not found",
+        errorDetails: null,
       });
     }
 
@@ -66,6 +67,7 @@ router.post("/userLogin", async (req, res) => {
         success: false,
         responseData: null,
         message: "Error, Incorrect Email Or password",
+        errorDetails: null,
       });
     }
 
@@ -84,6 +86,7 @@ router.post("/userLogin", async (req, res) => {
       success: true,
       responseData: { user: returnUser },
       message: "User logged in successfully",
+      errorDetails: null,
     });
   } catch (err) {
     res.status(500).json({
