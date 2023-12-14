@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userModel = require("../models/user");
+const jwt = require('jsonwebtoken');
 
 // Registration
 router.post("/userRegister", async (req, res) => {
@@ -71,26 +72,29 @@ router.post("/userLogin", async (req, res) => {
       });
     }
 
-    // If both checks pass, you can consider the user logged in
+    // If both checks pass, update the user's last login date
+    const updatedUser = await userModel.findOneAndUpdate({ _id: user._id }, { $set: { lastLoginDate: Date.now() } }, { new: true });
 
-    userModel.findOneAndUpdate({ _id: user._id }, { $set: { lastLoginDate: Date.now() } }, { new: true });
     let returnUser = {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      Address: user.Address,
-      status: user.status,
-      userRole: user.userRole,
+      id: updatedUser.id,
+      email: updatedUser.email,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      phoneNumber: updatedUser.phoneNumber,
+      Address: updatedUser.Address,
+      status: updatedUser.status,
+      userRole: updatedUser.userRole,
     };
+    const token = jwt.sign(returnUser, process.env.SECRETKEY, { expiresIn: "1h" });
     res.status(200).json({
       success: true,
-      responseData: { user: returnUser },
+      responseData: { token: token },
       message: "User logged in successfully",
       errorDetails: null,
     });
   } catch (err) {
+    console.error("Error during user login:", err); // Log the error for debugging purposes
+
     res.status(500).json({
       success: false,
       responseData: null,
@@ -99,4 +103,6 @@ router.post("/userLogin", async (req, res) => {
     });
   }
 });
+
+
 module.exports = router;

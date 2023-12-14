@@ -4,9 +4,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 // Initialize app with express
-const app = express(); //Bring in express
+const app = express();
 app.use(cors());
 
 // ------------Routes------------//
