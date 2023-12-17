@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userModel = require("../models/user");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 // Registration
 router.post("/userRegister", async (req, res) => {
@@ -44,7 +44,6 @@ router.post("/userRegister", async (req, res) => {
 router.post("/userLogin", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-
   const query = { email: email.toLowerCase() };
 
   try {
@@ -103,6 +102,5 @@ router.post("/userLogin", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
