@@ -103,4 +103,65 @@ router.post("/userLogin", async (req, res) => {
   }
 });
 
+router.post("/refresh-token", async (req, res) => {
+  const refreshToken = req.body.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(400).json({
+      success: false,
+      responseData: null,
+      message: "Refresh token is required",
+      errorDetails: null,
+    });
+  }
+
+  try {
+    // Verify the refresh token
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRETKEY);
+
+    // Find the user based on the decoded information (e.g., user ID)
+    const user = await userModel.findById(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        responseData: null,
+        message: "Invalid refresh token",
+        errorDetails: null,
+      });
+    }
+
+    // Update the last login date if needed (optional)
+    const updatedUser = await userModel.findOneAndUpdate({ _id: user._id }, { $set: { lastLoginDate: Date.now() } }, { new: true });
+
+    // Create a new access token
+    const returnUser = {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      phoneNumber: updatedUser.phoneNumber,
+      Address: updatedUser.Address,
+      status: updatedUser.status,
+      userRole: updatedUser.userRole,
+    };
+
+    const newAccessToken = jwt.sign(returnUser, process.env.SECRETKEY, { expiresIn: "1h" });
+
+    res.status(200).json({
+      success: true,
+      responseData: { token: newAccessToken },
+      message: "Token refreshed successfully",
+      errorDetails: null,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      responseData: null,
+      message: "Invalid refresh token",
+      errorDetails: error.message,
+    });
+  }
+});
+
 module.exports = router;
